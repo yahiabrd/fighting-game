@@ -67,6 +67,10 @@ const player = new Fighter({
       imageSrc: './img/samuraiMack/Attack1.png',
       framesMax: 6
     },
+    attack2: {
+      imageSrc: './img/samuraiMack/Attack2.png',
+      framesMax: 6
+    },
     takeHit: {
       imageSrc: './img/samuraiMack/Take Hit - white silhouette.png',
       framesMax: 4
@@ -128,6 +132,10 @@ const enemy = new Fighter({
       imageSrc: './img/kenji/Attack1.png',
       framesMax: 4
     },
+    attack2: {
+      imageSrc: './img/kenji/Attack2.png',
+      framesMax: 4
+    },
     takeHit: {
       imageSrc: './img/kenji/Take hit.png',
       framesMax: 3
@@ -146,8 +154,6 @@ const enemy = new Fighter({
     height: 50
   }
 })
-
-console.log(player)
 
 const keys = {
   a: {
@@ -183,11 +189,19 @@ function animate() {
   // player movement
 
   if (keys.a.pressed && player.lastKey === 'a') {
-    player.velocity.x = -5
-    player.switchSprite('run')
+    if(player.position.x < 0) {
+      keys.a.pressed = false
+    }else {
+      player.velocity.x = -5
+      player.switchSprite('run')
+    }
   } else if (keys.d.pressed && player.lastKey === 'd') {
-    player.velocity.x = 5
-    player.switchSprite('run')
+    if(player.position.x > 955) {
+      keys.d.pressed = false
+    }else {
+      player.velocity.x = 5
+      player.switchSprite('run')
+    }
   } else {
     player.switchSprite('idle')
   }
@@ -201,11 +215,19 @@ function animate() {
 
   // Enemy movement
   if (keys.ArrowLeft.pressed && enemy.lastKey === 'ArrowLeft') {
-    enemy.velocity.x = -5
-    enemy.switchSprite('run')
+    if(enemy.position.x < 0) {
+      keys.ArrowLeft.pressed = false
+    }else {
+      enemy.velocity.x = -5
+      enemy.switchSprite('run')
+    }
   } else if (keys.ArrowRight.pressed && enemy.lastKey === 'ArrowRight') {
-    enemy.velocity.x = 5
-    enemy.switchSprite('run')
+    if(enemy.position.x > 955) {
+      keys.ArrowRight.pressed = false
+    }else {
+      enemy.velocity.x = 5
+      enemy.switchSprite('run')
+    }
   } else {
     enemy.switchSprite('idle')
   }
@@ -280,8 +302,13 @@ window.addEventListener('keydown', (event) => {
         keys.a.pressed = true
         player.lastKey = 'a'
         break
+      case 'c':
+        player.attack2()
+        break
       case 'w':
-        player.velocity.y = -20
+        if(player.position.y >= 310) {
+          player.velocity.y = -20
+        }
         break
       case ' ':
         player.attack()
@@ -300,11 +327,15 @@ window.addEventListener('keydown', (event) => {
         enemy.lastKey = 'ArrowLeft'
         break
       case 'ArrowUp':
-        enemy.velocity.y = -20
+        if(enemy.position.y >= 310) {
+          enemy.velocity.y = -20
+        }
         break
       case 'ArrowDown':
         enemy.attack()
-
+        break
+      case 'n':
+        enemy.attack2()
         break
     }
   }
